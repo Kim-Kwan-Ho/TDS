@@ -27,11 +27,15 @@ public class MonsterBehaviour : BaseBehaviour
     [SerializeField] private float _frontRayDist;
     [SerializeField] private float _backRayDist;
     [SerializeField] private float _upperRayDist;
-    [SerializeField] private float _upperLeftRayDist;
+    [SerializeField] private float _upperSideRayDist;
     [SerializeField] private float _downRayDist;
     [SerializeField] private LayerMask _monsterLayer;
-    [SerializeField] private LayerMask _groundLayer;
 
+
+    [Header("Cycle")]
+    [SerializeField] private float _maxKnockBackSpeed;
+    [SerializeField] private float _knockBackPower;
+    [SerializeField] private float _knockBackMargin;
     protected override void Initialize()
     {
         base.Initialize();
@@ -54,7 +58,7 @@ public class MonsterBehaviour : BaseBehaviour
     private void MoveTowardPlayer()
     {
         _rigid.AddForce(Vector2.left * _movementSpeed, ForceMode2D.Impulse);
-        var clampedVelocity = Mathf.Clamp(_rigid.velocity.x, -_maxMovementSpeed, _maxMovementSpeed);
+        var clampedVelocity = Mathf.Clamp(_rigid.velocity.x, -_maxMovementSpeed, _maxKnockBackSpeed);
         _rigid.velocity = new Vector2(clampedVelocity, _rigid.velocity.y);
     }
 
@@ -79,7 +83,7 @@ public class MonsterBehaviour : BaseBehaviour
 
     private bool CanJump()
     {
-        return ((_isGround || CheckBottom()) && CheckFrontMonster() && !CheckUpperMonster() && !CheckUpperLeftMonster() && !CheckBackMonster());
+        return ((_isGround || CheckBottom()) && CheckFrontMonster() && !CheckUpperMonster() && !CheckUpperSideMonster() && !CheckBackMonster());
     }
 
     private bool CheckMonster(Vector2 startPos, Vector2 direction, float dist)
@@ -97,9 +101,12 @@ public class MonsterBehaviour : BaseBehaviour
     {
         return CheckMonster(new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.max.y + _rayOffSet), Vector2.left, _upperRayDist);
     }
-    private bool CheckUpperLeftMonster()
+    private bool CheckUpperSideMonster()
     {
-        return CheckMonster(new Vector2(_capsuleCol.bounds.max.x, _capsuleCol.bounds.max.y + _rayOffSet), Vector2.left, _upperLeftRayDist);
+
+        return CheckMonster(new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.max.y + _rayOffSet * 2), Vector2.left, _upperSideRayDist) &&
+               CheckMonster(new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.max.y + _rayOffSet * 2), Vector2.right, _upperSideRayDist)
+               ;
     }
 
 
@@ -123,6 +130,29 @@ public class MonsterBehaviour : BaseBehaviour
         }
     }
 
+    private void OnCollisionStay2D(Collision2D col)
+    {
+        if (col.gameObject.CompareTag("Monster"))
+        {
+            if (CheckKnockBack(col.collider.bounds.center))
+            {
+                KnockBack();
+            }
+        }
+    }
+    private bool CheckKnockBack(Vector2 target)
+    {
+        return (_capsuleCol.bounds.center.x >= target.x - _knockBackMargin) && (_capsuleCol.bounds.center.y < target.y);
+    }
+
+    private void KnockBack()
+    {
+        if (!_isGround)
+            return;
+        _rigid.AddForce(Vector2.right * _knockBackPower, ForceMode2D.Impulse);
+    }
+
+
     private void OnCollisionExit2D(Collision2D col)
     {
         if (col.gameObject.CompareTag("Ground"))
@@ -134,11 +164,17 @@ public class MonsterBehaviour : BaseBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(new Vector2(_capsuleCol.bounds.max.x, _capsuleCol.bounds.max.y + _rayOffSet), new Vector2(_capsuleCol.bounds.max.x, _capsuleCol.bounds.max.y + _rayOffSet) + Vector2.left * _upperLeftRayDist);
+        Gizmos.DrawLine(new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.max.y + _rayOffSet * 2), new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.max.y + _rayOffSet * 2) + Vector2.right * _upperSideRayDist);
+        Gizmos.DrawLine(new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.max.y + _rayOffSet * 2), new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.max.y + _rayOffSet * 2) + Vector2.left * _upperSideRayDist);
+
         Gizmos.DrawLine(new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.max.y + _rayOffSet), new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.max.y + _rayOffSet) + Vector2.up * _upperRayDist);
         Gizmos.DrawLine(new Vector2(_capsuleCol.bounds.max.x + _rayOffSet, _capsuleCol.bounds.center.y), new Vector2(_capsuleCol.bounds.max.x + _rayOffSet, _capsuleCol.bounds.center.y) + Vector2.right * _backRayDist);
         Gizmos.DrawLine(new Vector2(_capsuleCol.bounds.min.x - _rayOffSet, _capsuleCol.bounds.center.y), new Vector2(_capsuleCol.bounds.min.x - _rayOffSet, _capsuleCol.bounds.center.y) + Vector2.left * _frontRayDist);
         Gizmos.DrawLine(new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.min.y - _rayOffSet), new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.min.y - _rayOffSet) + Vector2.down * _downRayDist);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.center.y), new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.center.y) + Vector2.right * _knockBackMargin);
+
     }
     protected override void OnBindField()
     {
