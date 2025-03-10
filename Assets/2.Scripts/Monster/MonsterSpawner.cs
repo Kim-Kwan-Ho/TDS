@@ -16,9 +16,12 @@ public class MonsterSpawner : BaseBehaviour
     {
         base.Initialize();
         _spawnWaitTime = new WaitForSeconds(_spawnDelay);
-        StartCoroutine(CoSpawnMonster());
     }
 
+    private void Start()
+    {
+        StartCoroutine(CoSpawnMonster());
+    }
     private IEnumerator CoSpawnMonster()
     {
         while (true)
