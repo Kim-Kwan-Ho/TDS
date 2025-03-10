@@ -134,7 +134,7 @@ MonoBehaviour:
   _movementSpeed: 1
   _maxMovementSpeed: 2
   _jumpPower: 25
-  _jumpDelay: 1.5
+  _jumpDelay: 1
   _rigid: {fileID: 1569613432478684480}
   _capsuleCol: {fileID: 4522701295118875466}
   _rayOffSet: 0.01
@@ -148,6 +148,7 @@ MonoBehaviour:
     m_Bits: 1024
   _maxKnockBackSpeed: 0.5
   _knockBackPower: 2.5
+  _knockBackMargin: 0.15
 --- !u!1 &2094693183665648150
 GameObject:
   m_ObjectHideFlags: 0

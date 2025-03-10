@@ -35,6 +35,7 @@ public class MonsterBehaviour : BaseBehaviour
     [Header("Cycle")]
     [SerializeField] private float _maxKnockBackSpeed;
     [SerializeField] private float _knockBackPower;
+    [SerializeField] private float _knockBackMargin;
     protected override void Initialize()
     {
         base.Initialize();
@@ -133,24 +134,25 @@ public class MonsterBehaviour : BaseBehaviour
     {
         if (col.gameObject.CompareTag("Monster"))
         {
-            if (CheckKnockBack(col.transform.position))
+            if (CheckKnockBack(col.collider.bounds.center))
             {
-                col.gameObject.GetComponent<MonsterBehaviour>().KnockBack();
+                KnockBack();
             }
         }
     }
-
     private bool CheckKnockBack(Vector2 target)
     {
-        return (transform.position.x < target.x) && (transform.position.y > target.y);
+        return (_capsuleCol.bounds.center.x >= target.x - _knockBackMargin) && (_capsuleCol.bounds.center.y < target.y);
     }
 
-    public void KnockBack()
+    private void KnockBack()
     {
         if (!_isGround)
             return;
         _rigid.AddForce(Vector2.right * _knockBackPower, ForceMode2D.Impulse);
     }
+
+
     private void OnCollisionExit2D(Collision2D col)
     {
         if (col.gameObject.CompareTag("Ground"))
@@ -169,6 +171,10 @@ public class MonsterBehaviour : BaseBehaviour
         Gizmos.DrawLine(new Vector2(_capsuleCol.bounds.max.x + _rayOffSet, _capsuleCol.bounds.center.y), new Vector2(_capsuleCol.bounds.max.x + _rayOffSet, _capsuleCol.bounds.center.y) + Vector2.right * _backRayDist);
         Gizmos.DrawLine(new Vector2(_capsuleCol.bounds.min.x - _rayOffSet, _capsuleCol.bounds.center.y), new Vector2(_capsuleCol.bounds.min.x - _rayOffSet, _capsuleCol.bounds.center.y) + Vector2.left * _frontRayDist);
         Gizmos.DrawLine(new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.min.y - _rayOffSet), new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.min.y - _rayOffSet) + Vector2.down * _downRayDist);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.center.y), new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.center.y) + Vector2.right * _knockBackMargin);
+
     }
     protected override void OnBindField()
     {
