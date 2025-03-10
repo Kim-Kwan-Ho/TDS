@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1569613432478684480}
   - component: {fileID: 4522701295118875466}
   - component: {fileID: 2470625797579929651}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ZombieMelee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 319310827380095937}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: c9d6a0f5eb53a784e85209fd64d9ba3c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -131,9 +131,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8987165e30fb09143a0a3dd52a1568ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rigid: {fileID: 1569613432478684480}
   _movementSpeed: 1
   _maxMovementSpeed: 2
+  _jumpPower: 4
+  _jumpDelay: 0.5
+  _rigid: {fileID: 1569613432478684480}
+  _capsuleCol: {fileID: 4522701295118875466}
+  _rayOffSet: 0.01
+  _frontRayDist: 0.3
+  _backRayDist: 0.3
+  _upperRayDist: 0.5
+  _upperLeftRayDist: 0.75
+  _downRayDist: 0.05
+  _monsterLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1 &2094693183665648150
 GameObject:
   m_ObjectHideFlags: 0
