@@ -131,24 +131,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8987165e30fb09143a0a3dd52a1568ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movementSpeed: 1
-  _maxMovementSpeed: 2
-  _jumpPower: 25
-  _jumpDelay: 1
+  _monsterSettingsSo: {fileID: 11400000, guid: b1fdb633175b14a408468895bdcd604e, type: 2}
   _rigid: {fileID: 1569613432478684480}
   _capsuleCol: {fileID: 4522701295118875466}
-  _rayOffSet: 0.01
-  _frontRayDist: 0.33
-  _backRayDist: 0.3
-  _upperRayDist: 0.5
-  _upperSideRayDist: 0.7
-  _downRayDist: 0.3
-  _monsterLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  _maxKnockBackSpeed: 0.5
-  _knockBackPower: 2.5
-  _knockBackMargin: 0.15
 --- !u!1 &2094693183665648150
 GameObject:
   m_ObjectHideFlags: 0
