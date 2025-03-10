@@ -85,7 +85,7 @@ public class MonsterBehaviour : BaseBehaviour
     }
     private bool CheckUpperMonster()
     {
-        return CheckMonster(new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.max.y + _monsterSettingsSo.RayOffSet), Vector2.left, _monsterSettingsSo.UpperRayDist);
+        return CheckMonster(new Vector2(_capsuleCol.bounds.center.x, _capsuleCol.bounds.max.y + _monsterSettingsSo.RayOffSet), Vector2.up, _monsterSettingsSo.UpperRayDist);
     }
     private bool CheckUpperSideMonster()
     {
