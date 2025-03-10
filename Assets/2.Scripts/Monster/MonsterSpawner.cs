@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class MonsterSpawner : BaseBehaviour
 {
+
+    [SerializeField] private MonsterSpawnSettingsSo _monsterSpawnSettingsSo;
+
+
     [SerializeField] private GameObject _monsterPrefab;
     [SerializeField] private Transform _spawnPoint;
-    [SerializeField] private float _spawnDelay;
-    [SerializeField] private int _maxSpawnCount;
+
 
     private HashSet<GameObject> _spawnedMonsters = new HashSet<GameObject>();
-
     private WaitForSeconds _spawnWaitTime;
     protected override void Initialize()
     {
         base.Initialize();
-        _spawnWaitTime = new WaitForSeconds(_spawnDelay);
+        _spawnWaitTime = new WaitForSeconds(_monsterSpawnSettingsSo.SpawnDelay);
     }
 
     private void Start()
@@ -37,7 +39,7 @@ public class MonsterSpawner : BaseBehaviour
 
     private bool CanSpawnMonster()
     {
-        return (_spawnedMonsters.Count < _maxSpawnCount);
+        return (_spawnedMonsters.Count < _monsterSpawnSettingsSo.MaxSpawnCount);
     }
 
 
@@ -47,6 +49,7 @@ public class MonsterSpawner : BaseBehaviour
         base.OnBindField();
         _monsterPrefab = FindObjectInAsset<GameObject>("ZombieMelee", EDataType.prefab);
         _spawnPoint = GameObject.Find("MonsterSpawnPoint").transform;
+        _monsterSpawnSettingsSo = FindObjectInAsset<MonsterSpawnSettingsSo>();
     }
 #endif
 

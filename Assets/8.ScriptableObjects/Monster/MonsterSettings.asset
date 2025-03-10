@@ -20,11 +20,11 @@ MonoBehaviour:
   _frontRayDist: 0.33
   _backRayDist: 0.3
   _upperRayDist: 0.5
-  _upperSideRayDist: 0.7
+  _upperSideRayDist: 1
   _downRayDist: 0.3
   _monsterLayer:
     serializedVersion: 2
     m_Bits: 1024
   _maxKnockBackSpeed: 0.5
-  _knockBackPower: 2.5
-  _knockBackMargin: 0.15
+  _knockBackPower: 3.5
+  _knockBackMargin: 0.1
